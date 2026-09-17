@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thai GL 追星習慣問卷</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--pink:#F27FA0;--pink-soft:#FBD5E0;--pink-bg:#FFF6F8;--navy:#2E3350;--muted:#7D8299;--line:#F0E3E8;--err:#E2607A;--radius:18px}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:"Noto Sans TC",-apple-system,BlinkMacSystemFont,"PingFang TC","Microsoft JhengHei",sans-serif;color:var(--navy);background:linear-gradient(180deg,#FFF3F6 0%,#FFF9F7 45%,#F7F3FF 100%);min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 48px}
+.hero{margin:16px 0 0;border-radius:var(--radius);overflow:hidden;box-shadow:0 10px 30px rgba(242,127,160,.18);background:#fff}
+.hero img{display:block;width:100%;height:auto}
+.card{background:#fff;border-radius:var(--radius);box-shadow:0 8px 24px rgba(46,51,80,.06);margin-top:16px;overflow:hidden}
+.banner img{display:block;width:100%;height:auto}
+.body{padding:20px 20px 24px}
+h1{font-size:22px;margin:0 0 8px;line-height:1.35}
+h2{font-size:18px;margin:0 0 2px}
+.lead{color:var(--muted);font-size:14px;margin:0 0 16px}
+.step{font-size:12px;color:var(--pink);font-weight:500;letter-spacing:.04em;margin:0 0 4px}
+.lang{display:inline-flex;background:var(--pink-bg);border-radius:999px;padding:4px;margin-bottom:16px}
+.lang button{border:0;background:transparent;padding:6px 14px;border-radius:999px;font:inherit;font-size:13px;color:var(--muted);cursor:pointer}
+.lang button.on{background:#fff;color:var(--navy);box-shadow:0 2px 8px rgba(0,0,0,.08);font-weight:500}
+.progress{display:flex;gap:6px;margin:0 0 14px}
+.progress i{flex:1;height:4px;border-radius:2px;background:var(--pink-soft)}
+.progress i.on{background:var(--pink)}
+.q{padding:18px 0;border-top:1px solid var(--line)}
+.q.first{border-top:0;padding-top:6px}
+.t{font-weight:500;font-size:16px;margin:0 0 2px;line-height:1.5}
+.t .n{color:var(--pink);font-weight:700;margin-right:6px}
+.h{font-size:12px;color:var(--muted);margin:0 0 10px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;cursor:pointer;background:#fff;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--pink-soft)}
+.opt.on{border-color:var(--pink);background:var(--pink-bg)}
+.opt input{margin:5px 0 0;accent-color:var(--pink);flex:none;width:16px;height:16px}
+.opt span{font-size:15px}
+.err{color:var(--err);font-size:13px;margin-top:8px;display:none}
+.q.bad .err{display:block}
+.q.bad .opt{border-color:#F5C4CF}
+.q.bad input[type=text],.q.bad input[type=number]{border-color:#F5C4CF}
+.feat{margin:0 0 16px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.feat img{display:block;width:100%;height:auto}
+.alloc{display:grid;gap:10px}
+.arow{display:grid;grid-template-columns:1fr 84px;gap:12px;align-items:center;padding:12px;border:1.5px solid var(--line);border-radius:12px}
+.arow .name{font-weight:500;font-size:15px}
+.arow .def{font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.5}
+.arow input{width:84px;height:44px;border:1.5px solid var(--line);border-radius:10px;font:inherit;font-size:18px;text-align:center;color:var(--navy);background:#fff}
+.arow input:focus{outline:0;border-color:var(--pink)}
+.total{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding:10px 14px;border-radius:12px;background:var(--pink-bg);font-size:14px}
+.total b{font-size:18px}
+.total.ok{background:#E9F7F1;color:#2F7D5F}
+.total.over{background:#FDE8EC;color:var(--err)}
+.text input[type=text]{width:100%;padding:12px;border:1.5px solid var(--line);border-radius:12px;font:inherit;font-size:15px;color:var(--navy)}
+.text input[type=text]:focus{outline:0;border-color:var(--pink)}
+.text .row{display:flex;gap:8px;align-items:center}
+.text .row input[type=text]{flex:1}
+.mini{flex:none;border:1.5px solid var(--pink-soft);background:#fff;color:var(--pink);border-radius:999px;padding:8px 12px;font:inherit;font-size:13px;cursor:pointer;white-space:nowrap}
+.mini:hover{background:var(--pink-bg)}
+.note{background:var(--pink-bg);border-radius:12px;padding:12px 14px;font-size:13.5px;margin:8px 0 12px;line-height:1.6}
+.note b{display:block;margin-bottom:4px}
+.note ol,.note ul{margin:4px 0 0;padding-left:20px}
+.note .kv{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:6px 0}
+.note .kv span:nth-child(odd){color:var(--muted)}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--muted);margin-top:12px;cursor:pointer}
+.consent input{accent-color:var(--pink);margin:4px 0 0;flex:none;width:16px;height:16px}
+.consent span{flex:1;line-height:1.55}
+.nav{display:flex;gap:10px;margin-top:20px}
+.btn{flex:1;border:0;border-radius:999px;padding:14px 18px;font:inherit;font-size:16px;font-weight:500;cursor:pointer;transition:transform .1s,opacity .15s}
+.btn:active{transform:scale(.98)}
+.btn.p{background:linear-gradient(135deg,#F79BB6,#F27FA0);color:#fff;box-shadow:0 8px 18px rgba(242,127,160,.35)}
+.btn.p:disabled{opacity:.6;cursor:default}
+.btn.s{background:var(--pink-bg);color:var(--navy);flex:0 0 auto;padding:14px 20px}
+.navErr{color:var(--err);font-size:13px;text-align:center;margin-top:10px;min-height:1em}
+.end{text-align:center;padding:40px 20px 36px}
+.end .big{font-size:44px;line-height:1;margin-bottom:12px}
+.end h2{margin-bottom:8px}
+.end p{color:var(--muted);font-size:15px;max-width:420px;margin:0 auto}
+.winners{margin:16px auto 0;max-width:420px;text-align:left;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.winners table{width:100%;border-collapse:collapse;font-size:14px}
+.winners th,.winners td{padding:10px 12px;border-top:1px solid var(--line);text-align:left}
+.winners th{background:var(--pink-bg);color:var(--muted);font-weight:500;border-top:0;font-size:12.5px;white-space:nowrap}
+.winners td:first-child{color:var(--pink);font-weight:700;width:48px}
+.hp{position:absolute;left:-9999px;top:-9999px;opacity:0;height:0;width:0;overflow:hidden}
+.foot{text-align:center;font-size:12px;color:var(--muted);margin-top:20px;letter-spacing:.06em}
+@media (max-width:480px){.body{padding:16px 16px 20px}.arow{grid-template-columns:1fr 72px;gap:10px}.arow input{width:72px}h1{font-size:20px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="app"></div>
+  <div class="foot">FANTRACE · THAI GL EVENT &amp; MEDIA HUB</div>
+</div>
+<input class="hp" id="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+<script>
+// ---- 設定：只有這一段需要改 ----
+window.__SURVEY_CONFIG__ = {
+  assets: null,
+  assetBase: './assets/',
+  lang: null,
+  src: '',
+  // 問卷截止（台灣時間）。超過後頁面顯示「已截止」並停止送出。
+  deadline: '2026-09-30T23:59:59+08:00',
+  // 開獎後把 results.json 的 published 改成 true，頁面就會顯示得獎名單。
+  resultsUrl: './results.json',
+  // 後端：Google 表單，回覆存入團隊的試算表
+  form: {
+    action: 'https://docs.google.com/forms/d/e/1FAIpQLScYCTdwAroBWImwHH0xhnYr5QB0mBOIXLFxXJwj0p78QDIC4g/formResponse',
+    entries: {
+      lang: 'entry.1569782634', src: 'entry.1611745674', status: 'entry.947090115',
+      q1: 'entry.1530494205', q2: 'entry.1445314579', q3: 'entry.405020179', q4: 'entry.331367950',
+      q5: 'entry.433619572', q6: 'entry.786512799', q7: 'entry.1560732962', q8: 'entry.248808485',
+      q9: 'entry.421390225', q10: 'entry.410752225', q11: 'entry.812161359',
+      q12_schedule: 'entry.983984752', q12_photos: 'entry.2075284840', q12_creators: 'entry.121316758',
+      q12_translation: 'entry.929860562', q12_imagesearch: 'entry.562367560', q12_favorites: 'entry.1077360389',
+      q13: 'entry.628423868', q14: 'entry.1083918489', q15: 'entry.52973287', q16: 'entry.2138077538',
+      q17_contact: 'entry.2112600892', consent_q17: 'entry.1860590641',
+      q18_lottery: 'entry.1969354266', q19_contact: 'entry.1422301515', consent_q19: 'entry.994479672',
+      ua: 'entry.275447597'
+    }
+  },
+  closed: false,
+  results: null
+};
+</script>
+<script>
+(function(){
+'use strict';
+const CFG = window.__SURVEY_CONFIG__ || {};
+const ASSET_FILES = {header:'header_2048x768.jpg',features:'features_1536x1024.jpg',s1:'section_01.jpg',s2:'section_02.jpg',s3:'section_03.jpg',s4:'section_04.jpg',s5:'section_05.jpg',s6:'section_06.jpg'};
+function asset(k){
+  if (CFG.assets && CFG.assets[k]) return CFG.assets[k];
+  return (CFG.assetBase || '') + ASSET_FILES[k];
+}
+
+const params = new URLSearchParams(location.search);
+let lang = String(CFG.lang || params.get('lang') || 'tw').toLowerCase();
+lang = (lang === 'cn' || lang === 'zh-cn' || lang === 'sc' || lang === 'zh-hans') ? 'cn' : 'tw';
+const src = String(CFG.src || params.get('src') || '').slice(0, 40);
+
+// ------------------------------------------------------------------ 文案
+const UI = {
+  tw: {
+    title:'Thai GL 追星習慣問卷',
+    lead:'大約 5–7 分鐘。想了解妳平常怎麼追泰國 GL 的行程、照片和影片。所有回答匿名，只有妳自願留下聯絡方式時，我們才會聯繫妳。',
+    deadlineLine:'問卷截止：2026/9/30 23:59（台灣時間）',
+    start:'開始填寫', next:'下一步', back:'上一步', submit:'送出', sending:'送出中…',
+    req:'這題必填', sum:'總分需為 100，目前 ', sumLabel:'目前總分',
+    contactReq:'請留下聯絡方式', consentReq:'請勾選同意聲明', fail:'送出失敗，請再試一次', closedErr:'問卷已截止',
+    outTitle:'謝謝妳！', outMsg:'這份問卷主要針對有固定追蹤泰國 GL CP 或藝人的粉絲，這次就先到這裡。如果妳身邊有泰百粉絲，歡迎幫我們轉發 💗',
+    doneTitle:'送出成功！', doneMsg:'謝謝妳的回答 💗 訪談邀請與抽獎結果會透過妳留下的聯絡方式通知，抽獎結果也會公布在這個頁面。',
+    closedTitle:'問卷已截止', closedMsg:'謝謝大家的參與 💗 抽獎結果將於 2026/10/3 22:00（台灣時間）公布在這個頁面，並私訊通知得獎者。',
+    resultsTitle:'抽獎結果 🎁', resultsMsg:'恭喜以下得獎者！我們會依中獎順序私訊聯繫選擇獎品。為保護個資，聯絡方式僅部分揭露。',
+    colRank:'順序', colContact:'聯絡方式', colPrize:'獎品', prizeTBD:'聯繫中',
+    step:'第 {a} / {b} 段', multi:'可複選', single:'單選', max:'最多 {n} 個', exactly:'請選 {n} 個',
+    contactPh:'X 帳號 / LINE ID / Email，擇一即可', sameAsAbove:'同上',
+    q17Hint:'只用於後續訪談或產品測試邀請。',
+    q19Hint:'只用於本次抽獎及得獎通知。',
+    consent17:'我同意此聯絡方式僅用於 FANTRACE 訪談或產品測試邀請，訪談與測試結束後刪除，不會提供給第三方。',
+    consent19:'我同意此聯絡方式僅用於本次抽獎及得獎通知，開獎日起 20 天內刪除，不會提供給第三方。',
+    lotteryTitle:'抽獎活動說明 🎁',
+    lotteryIntro:'完成問卷並自願留下聯絡方式者，即可參加抽獎。',
+    lotteryKV:[['問卷截止','2026/9/30 23:59（台灣時間）'],['開獎','2026/10/3 22:00（台灣時間）'],['名額','6 位，依中獎順序聯繫選擇獎品'],['公布','本頁面公布並私訊通知，不完整揭露聯絡資訊']],
+    prizes:'獎品',
+    allocHint:'六格數字加總需為 100。可以參考上方的功能說明。'
+  },
+  cn: {
+    title:'Thai GL 追星习惯问卷',
+    lead:'大约 5–7 分钟。想了解你平常怎么追泰国 GL 的行程、照片和视频。所有回答匿名，只有你自愿留下联系方式时，我们才会联系你。',
+    deadlineLine:'问卷截止：2026/9/30 23:59（台湾时间）',
+    start:'开始填写', next:'下一步', back:'上一步', submit:'提交', sending:'提交中…',
+    req:'这题必填', sum:'总分需为 100，目前 ', sumLabel:'目前总分',
+    contactReq:'请留下联系方式', consentReq:'请勾选同意声明', fail:'提交失败，请再试一次', closedErr:'问卷已截止',
+    outTitle:'谢谢你！', outMsg:'这份问卷主要针对有固定关注泰国 GL CP 或艺人的粉丝，这次就先到这里。如果你身边有泰百粉丝，欢迎帮我们转发 💗',
+    doneTitle:'提交成功！', doneMsg:'谢谢你的回答 💗 访谈邀请与抽奖结果会通过你留下的联系方式通知，抽奖结果也会公布在这个页面。',
+    closedTitle:'问卷已截止', closedMsg:'谢谢大家的参与 💗 抽奖结果将于 2026/10/3 22:00（台湾时间）公布在这个页面，并私信通知获奖者。',
+    resultsTitle:'抽奖结果 🎁', resultsMsg:'恭喜以下获奖者！我们会按中奖顺序私信联系选择奖品。为保护个人信息，联系方式仅部分公开。',
+    colRank:'顺序', colContact:'联系方式', colPrize:'奖品', prizeTBD:'联系中',
+    step:'第 {a} / {b} 段', multi:'可多选', single:'单选', max:'最多 {n} 个', exactly:'请选 {n} 个',
+    contactPh:'X 账号 / LINE ID / Email，择一即可', sameAsAbove:'同上',
+    q17Hint:'只用于后续访谈或产品测试邀请。',
+    q19Hint:'只用于本次抽奖及获奖通知。',
+    consent17:'我同意此联系方式仅用于 FANTRACE 访谈或产品测试邀请，访谈与测试结束后删除，不会提供给第三方。',
+    consent19:'我同意此联系方式仅用于本次抽奖及获奖通知，开奖日起 20 天内删除，不会提供给第三方。',
+    lotteryTitle:'抽奖活动说明 🎁',
+    lotteryIntro:'完成问卷并自愿留下联系方式者，即可参加抽奖。',
+    lotteryKV:[['问卷截止','2026/9/30 23:59（台湾时间）'],['开奖','2026/10/3 22:00（台湾时间）'],['名额','6 位，按中奖顺序联系选择奖品'],['公布','本页面公布并私信通知，不完整公开联系信息']],
+    prizes:'奖品',
+    allocHint:'六格数字加总需为 100。可以参考上方的功能说明。'
+  }
+};
+
+const SECTIONS = [
+  { img:'s1', tw:'先確認一下',        cn:'先确认一下',        qs:['q1','q2'] },
+  { img:'s2', tw:'關於妳的追星日常',   cn:'关于你的追星日常',   qs:['q3','q4','q5','q6','q7'] },
+  { img:'s3', tw:'妳平常怎麼追活動？', cn:'你平常怎么追活动？', qs:['q8','q9','q10','q11'] },
+  { img:'s4', tw:'如果是妳，會怎麼選？', cn:'如果是你，会怎么选？', qs:['q12','q13'], feat:true },
+  { img:'s5', tw:'這樣的工具，妳會用嗎？', cn:'这样的工具，你会用吗？', qs:['q14','q15'] },
+  { img:'s6', tw:'最後一小步',        cn:'最后一小步',        qs:['q16','q17','q18','q19'] }
+];
+
+// 功能定義（Q12 / Q13 共用）。tw.n 是寫進試算表的正式值。
+const FEATURES = [
+  { key:'schedule',    icon:'📅', tw:{ n:'多 CP 行程整合',   d:'把妳追的不同藝人／CP 的實體活動、直播、品牌活動等行程集中在同一個地方，不用分別追不同官方、後援會和群組。' },
+                                  cn:{ n:'多 CP 行程整合',   d:'把你追的不同艺人／CP 的线下活动、直播、品牌活动等行程集中在同一个地方，不用分别追不同官方、后援会和群组。' } },
+  { key:'photos',      icon:'📷', tw:{ n:'活動照片整理',     d:'點進某一場活動，就能集中找到這場活動相關的飯拍、官方照片等內容。' },
+                                  cn:{ n:'活动照片整理',     d:'点进某一场活动，就能集中找到这场活动相关的饭拍、官方照片等内容。' } },
+  { key:'creators',    icon:'📸', tw:{ n:'攝影者／站姐索引', d:'可以知道某一場活動有哪些站姐／攝影者有拍，並找到她們的帳號及原始貼文。' },
+                                  cn:{ n:'摄影者／站姐索引', d:'可以知道某一场活动有哪些站姐／摄影者拍了，并找到她们的账号及原始帖子。' } },
+  { key:'translation', icon:'🌏', tw:{ n:'影片翻譯',         d:'活動訪問、直播、飯拍影片等泰文內容，可以查看中文／其他語言翻譯或摘要。' },
+                                  cn:{ n:'视频翻译',         d:'活动采访、直播、饭拍视频等泰文内容，可以查看中文／其他语言翻译或摘要。' } },
+  { key:'imagesearch', icon:'🔎', tw:{ n:'圖片辨識搜尋',     d:'丟一張不知道來源的藝人照片，幫妳找「這是哪場活動、什麼日期、可能是哪位攝影者拍的」。' },
+                                  cn:{ n:'图片识别搜索',     d:'丢一张不知道来源的艺人照片，帮你找“这是哪场活动、什么日期、可能是哪位摄影者拍的”。' } },
+  { key:'favorites',   icon:'❤️', tw:{ n:'收藏',             d:'把喜歡的活動、照片、影片或攝影者收藏到自己的資料夾，之後可以快速找回。' },
+                                  cn:{ n:'收藏',             d:'把喜欢的活动、照片、视频或摄影者收藏到自己的文件夹，之后可以快速找回。' } }
+];
+
+// 題目。tw.o 是寫進試算表的正式值；cn.o 只負責顯示。
+const Q = {
+  q1:  { type:'radio', tw:{ t:'妳目前主要追的是哪一類？', o:['泰國 GL','泰國其他（演員 / 歌手 / 團體）','韓星','日星','體育','其他'] },
+                       cn:{ t:'你目前主要追的是哪一类？', o:['泰国 GL','泰国其他（演员 / 歌手 / 团体）','韩星','日星','体育','其他'] } },
+  q2:  { type:'radio', tw:{ t:'妳有沒有固定追蹤的泰國 GL CP 或藝人？', o:['有','沒有'] },
+                       cn:{ t:'你有没有固定关注的泰国 GL CP 或艺人？', o:['有','没有'] } },
+  q3:  { type:'radio', tw:{ t:'妳追星的方式比較接近哪種？', o:['主要追 CP','主要追單人藝人','兩種都有'] },
+                       cn:{ t:'你追星的方式比较接近哪种？', o:['主要追 CP','主要追单人艺人','两种都有'] } },
+  q4:  { type:'radio', tw:{ t:'目前同時固定追蹤幾組 CP 或幾位藝人？', o:['1','2–3','4–5','5 以上'] },
+                       cn:{ t:'目前同时固定关注几组 CP 或几位艺人？', o:['1','2–3','4–5','5 以上'] } },
+  q5:  { type:'radio', tw:{ t:'妳的所在地區？', o:['台灣','中國大陸','香港 / 澳門','馬來西亞 / 新加坡','泰國','其他'] },
+                       cn:{ t:'你的所在地区？', o:['台湾','中国大陆','香港 / 澳门','马来西亚 / 新加坡','泰国','其他'] } },
+  q6:  { type:'radio', tw:{ t:'年齡層？', o:['18 以下','18–24','25–30','31–35','35 以上'] },
+                       cn:{ t:'年龄层？', o:['18 以下','18–24','25–30','31–35','35 以上'] } },
+  q7:  { type:'check', tw:{ t:'平常主要從哪裡得知推的行程？', o:['藝人官方 X','經紀公司 / 劇組官方帳號','後援會 / 站子','微信群 / LINE 群','Instagram','Threads','朋友私訊轉發','其他'] },
+                       cn:{ t:'平常主要从哪里得知推的行程？', o:['艺人官方 X','经纪公司 / 剧组官方账号','后援会 / 站子','微信群 / LINE 群','Instagram','Threads','朋友私信转发','其他'] } },
+  q8:  { type:'radio', tw:{ t:'一週大概查幾次明星的行程？', o:['幾乎不查，看到再說','每週 1–2 次','每週 3–5 次','每天','每天多次'] },
+                       cn:{ t:'一周大概查几次明星的行程？', o:['几乎不查，看到再说','每周 1–2 次','每周 3–5 次','每天','每天多次'] } },
+  q9:  { type:'radio', tw:{ t:'上一次漏掉的活動或直播，是多久以前？', o:['一週內','一個月內','三個月內','更久以前','沒有漏掉過'] },
+                       cn:{ t:'上一次漏掉的活动或直播，是多久以前？', o:['一周内','一个月内','三个月内','更久以前','没有漏掉过'] } },
+  q10: { type:'radio', tw:{ t:'最怕漏掉的是哪一種？', o:['直播','見面會 / 簽售','演唱會 / Fan Meeting','品牌活動 / 記者會','節目或劇集播出','頒獎典禮','粉絲企劃 / 應援','其他'] },
+                       cn:{ t:'最怕漏掉的是哪一种？', o:['直播','见面会 / 签售','演唱会 / Fan Meeting','品牌活动 / 记者会','节目或剧集播出','颁奖典礼','粉丝企划 / 应援','其他'] } },
+  q11: { type:'check', max:3, tw:{ t:'活動結束後，妳最常找什麼？', o:['飯拍照片（含站姊、常追線下的粉絲所拍攝）','現場影片','影片翻譯','官方照片','新聞 / 報導','其他粉絲的心得','不特別找'] },
+                              cn:{ t:'活动结束后，你最常找什么？', o:['饭拍照片（含站姐、常追线下的粉丝所拍摄）','现场视频','视频翻译','官方照片','新闻 / 报道','其他粉丝的心得','不特别找'] } },
+  q12: { type:'alloc', tw:{ t:'如果妳有 100 分可以分配，妳會怎麼分給以下功能？' }, cn:{ t:'如果你有 100 分可以分配，你会怎么分给以下功能？' } },
+  q13: { type:'check', exact:2, tw:{ t:'如果只能留兩個功能，妳會留哪兩個？' }, cn:{ t:'如果只能留两个功能，你会留哪两个？' } },
+  q14: { type:'radio', tw:{ t:'如果有一個地方集中整理妳追的所有 CP 行程，妳會多常看？', o:['每天','每週幾次','有活動時才看','應該不會用'] },
+                       cn:{ t:'如果有一个地方集中整理你追的所有 CP 行程，你会多常看？', o:['每天','每周几次','有活动时才看','应该不会用'] } },
+  q15: { type:'radio', tw:{ t:'如果發現行程漏了一場，妳願意自己幫忙補上嗎？', o:['願意','看情況','不願意'] },
+                       cn:{ t:'如果发现行程漏了一场，你愿意自己帮忙补上吗？', o:['愿意','看情况','不愿意'] } },
+  q16: { type:'check', tw:{ t:'願不願意參加 30 分鐘訪談，或兩週的行程頁測試？', o:['願意參加訪談','願意參加測試','都不方便'] },
+                       cn:{ t:'愿不愿意参加 30 分钟访谈，或两周的行程页测试？', o:['愿意参加访谈','愿意参加测试','都不方便'] } },
+  q17: { type:'contact', consentKey:'consent17', hintKey:'q17Hint', show:() => (A.q16 || []).some(v => v !== '都不方便'),
+         tw:{ t:'訪談／測試聯絡方式' }, cn:{ t:'访谈／测试联系方式' } },
+  q18: { type:'radio', lottery:true,
+         tw:{ t:'是否參加本次問卷抽獎？', o:['願意參加','不參加'], p:['GR 初版小說','Any 皮質吊牌','官方明信片（影單人 ×1、繆妮單人 ×1）','2026 BBFF 小卡 奶愛一套','2026 BBFF 小卡 帕風一套','2026 BBFF 小卡 景米一套'] },
+         cn:{ t:'是否参加本次问卷抽奖？', o:['愿意参加','不参加'], p:['GR 初版小说','Any 皮质吊牌','官方明信片（影单人 ×1、缪妮单人 ×1）','2026 BBFF 小卡 奶爱一套','2026 BBFF 小卡 帕风一套','2026 BBFF 小卡 景米一套'] } },
+  q19: { type:'contact', consentKey:'consent19', hintKey:'q19Hint', copyFrom:'q17', show:() => A.q18 === '願意參加',
+         tw:{ t:'抽獎聯絡方式' }, cn:{ t:'抽奖联系方式' } }
+};
+Q.q13.tw.o = FEATURES.map(f => f.tw.n);
+Q.q13.cn.o = FEATURES.map(f => f.cn.n);
+const NUM = { q1:1,q2:2,q3:3,q4:4,q5:5,q6:6,q7:7,q8:8,q9:9,q10:10,q11:11,q12:12,q13:13,q14:14,q15:15,q16:16,q17:17,q18:18,q19:19 };
+
+// ------------------------------------------------------------------ 狀態
+const A = {};          // answers（值一律存繁體正式字串）
+let step = 0;          // 0 = intro, 1..6 = sections, 'out', 'done'
+let sending = false;
+const root = document.getElementById('app');
+
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function ui(k){ return UI[lang][k]; }
+function fmt(s, o){ return s.replace(/\{(\w+)\}/g, (_, k) => o[k]); }
+function allocSum(){ return FEATURES.reduce((s, f) => s + (A.q12 && Number.isFinite(A.q12[f.key]) ? A.q12[f.key] : 0), 0); }
+
+// ------------------------------------------------------------------ 畫面
+function render(){
+  if (CFG.closed) root.innerHTML = closedHtml();
+  else if (step === 0) root.innerHTML = introHtml();
+  else if (step === 'out') root.innerHTML = endHtml('out');
+  else if (step === 'done') root.innerHTML = endHtml('done');
+  else root.innerHTML = sectionHtml(step - 1);
+  document.documentElement.lang = lang === 'cn' ? 'zh-Hans' : 'zh-Hant';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function langToggle(){
+  return '<div class="lang" role="group" aria-label="language">' +
+    '<button type="button" data-act="lang" data-lang="tw" class="' + (lang === 'tw' ? 'on' : '') + '">繁體中文</button>' +
+    '<button type="button" data-act="lang" data-lang="cn" class="' + (lang === 'cn' ? 'on' : '') + '">简体中文</button>' +
+    '</div>';
+}
+
+function introHtml(){
+  return '<div class="hero"><img src="' + esc(asset('header')) + '" alt=""></div>' +
+    '<div class="card"><div class="body">' + langToggle() +
+      '<h1>' + esc(ui('title')) + '</h1>' +
+      '<p class="lead">' + esc(ui('lead')) + '<br>' + esc(ui('deadlineLine')) + '</p>' +
+      '<div class="nav"><button type="button" class="btn p" data-act="start">' + esc(ui('start')) + '</button></div>' +
+    '</div></div>';
+}
+
+function endHtml(kind){
+  const t = kind === 'out' ? ui('outTitle') : ui('doneTitle');
+  const m = kind === 'out' ? ui('outMsg') : ui('doneMsg');
+  return '<div class="card"><div class="end"><div class="big">' + (kind === 'out' ? '🌸' : '💗') + '</div>' +
+    '<h2>' + esc(t) + '</h2><p>' + esc(m) + '</p></div></div>';
+}
+
+function closedHtml(){
+  const r = CFG.results;
+  let html = '<div class="hero"><img src="' + esc(asset('header')) + '" alt=""></div><div class="card"><div class="body">' + langToggle() + '</div><div class="end" style="padding-top:0">';
+  if (r && r.published && Array.isArray(r.winners) && r.winners.length) {
+    html += '<div class="big">🎁</div><h2>' + esc(ui('resultsTitle')) + '</h2><p>' + esc(ui('resultsMsg')) + '</p>' +
+      '<div class="winners"><table><thead><tr><th>' + esc(ui('colRank')) + '</th><th>' + esc(ui('colContact')) + '</th><th>' + esc(ui('colPrize')) + '</th></tr></thead><tbody>' +
+      r.winners.map((w, i) => '<tr><td>' + (i + 1) + '</td><td>' + esc(w.contact || '') + '</td><td>' + esc(w.prize || ui('prizeTBD')) + '</td></tr>').join('') +
+      '</tbody></table></div>';
+  } else {
+    html += '<div class="big">🌸</div><h2>' + esc(ui('closedTitle')) + '</h2><p>' + esc(ui('closedMsg')) + '</p>';
+  }
+  return html + '</div></div>';
+}
+
+function sectionHtml(i){
+  const s = SECTIONS[i];
+  let html = '<div class="card"><div class="banner"><img src="' + esc(asset(s.img)) + '" alt=""></div><div class="body">';
+  html += '<div class="progress">' + SECTIONS.map((_, k) => '<i class="' + (k <= i ? 'on' : '') + '"></i>').join('') + '</div>';
+  html += '<p class="step">' + esc(fmt(ui('step'), { a: i + 1, b: SECTIONS.length })) + '</p>';
+  html += '<h2>' + esc(s[lang]) + '</h2>';
+  if (s.feat) html += '<div class="feat"><img src="' + esc(asset('features')) + '" alt=""></div>';
+  s.qs.forEach((id, k) => { html += qHtml(id, k === 0); });
+  const last = i === SECTIONS.length - 1;
+  html += '<div class="nav">' +
+    '<button type="button" class="btn s" data-act="back">' + esc(ui('back')) + '</button>' +
+    '<button type="button" class="btn p" data-act="next" id="nextBtn">' + esc(last ? ui('submit') : ui('next')) + '</button>' +
+    '</div><div class="navErr" id="navErr"></div>';
+  html += '</div></div>';
+  return html;
+}
+
+function qHtml(id, first){
+  const q = Q[id], L = q[lang];
+  if (q.type === 'contact') return '<div id="slot-' + id + '">' + contactHtml(id) + '</div>';
+  let inner = '';
+  let hint = '';
+  if (q.type === 'radio') hint = ui('single');
+  else if (q.type === 'check') hint = q.exact ? fmt(ui('exactly'), { n: q.exact }) : (q.max ? ui('multi') + '，' + fmt(ui('max'), { n: q.max }) : ui('multi'));
+  else if (q.type === 'alloc') hint = ui('allocHint');
+
+  if (q.type === 'radio' || q.type === 'check') {
+    const isCheck = q.type === 'check';
+    const canon = q.tw.o;
+    inner = '<div class="opts">' + L.o.map((label, i) => {
+      const v = canon[i];
+      const on = isCheck ? (A[id] || []).includes(v) : A[id] === v;
+      return '<label class="opt' + (on ? ' on' : '') + '"><input type="' + (isCheck ? 'checkbox' : 'radio') + '" name="' + id + '" value="' + i + '"' + (on ? ' checked' : '') + '><span>' + esc(label) + '</span></label>';
+    }).join('') + '</div>';
+    if (q.lottery) inner = lotteryHtml(L.p) + inner;
+  } else if (q.type === 'alloc') {
+    inner = '<div class="alloc">' + FEATURES.map(f => {
+      const v = A.q12 && Number.isFinite(A.q12[f.key]) ? A.q12[f.key] : '';
+      return '<div class="arow"><div><div class="name">' + f.icon + ' ' + esc(f[lang].n) + '</div><div class="def">' + esc(f[lang].d) + '</div></div>' +
+        '<input type="number" inputmode="numeric" min="0" max="100" step="1" data-alloc="' + f.key + '" value="' + v + '" aria-label="' + esc(f[lang].n) + '"></div>';
+    }).join('') + '</div>' + totalHtml();
+  }
+  return '<div class="q' + (first ? ' first' : '') + '" id="box-' + id + '">' +
+    '<p class="t"><span class="n">Q' + NUM[id] + '</span>' + esc(L.t) + '</p>' +
+    (hint ? '<p class="h">' + esc(hint) + '</p>' : '') + inner +
+    '<div class="err"></div></div>';
+}
+
+function lotteryHtml(prizes){
+  const kv = ui('lotteryKV').map(p => '<span>' + esc(p[0]) + '</span><span>' + esc(p[1]) + '</span>').join('');
+  return '<div class="note"><b>' + esc(ui('lotteryTitle')) + '</b>' + esc(ui('lotteryIntro')) +
+    '<div class="kv">' + kv + '</div>' +
+    '<b>' + esc(ui('prizes')) + '</b><ol>' + prizes.map(p => '<li>' + esc(p) + '</li>').join('') + '</ol></div>';
+}
+
+function totalHtml(){
+  const s = allocSum();
+  const cls = s === 100 ? 'ok' : (s > 100 ? 'over' : '');
+  return '<div class="total ' + cls + '" id="allocTotal"><span>' + esc(ui('sumLabel')) + '</span><b>' + s + ' / 100</b></div>';
+}
+
+function contactHtml(id){
+  const q = Q[id];
+  if (!q.show()) return '';
+  const L = q[lang];
+  const canCopy = q.copyFrom && Q[q.copyFrom].show() && (A[q.copyFrom] || '').trim();
+  return '<div class="q text" id="box-' + id + '">' +
+    '<p class="t"><span class="n">Q' + NUM[id] + '</span>' + esc(L.t) + '</p>' +
+    '<p class="h">' + esc(ui(q.hintKey)) + '</p>' +
+    '<div class="row"><input type="text" id="' + id + '" data-contact="' + id + '" maxlength="200" placeholder="' + esc(ui('contactPh')) + '" value="' + esc(A[id] || '') + '" autocomplete="off">' +
+    (canCopy ? '<button type="button" class="mini" data-act="copy" data-from="' + q.copyFrom + '" data-to="' + id + '">' + esc(ui('sameAsAbove')) + '</button>' : '') + '</div>' +
+    '<label class="consent"><input type="checkbox" id="' + q.consentKey + '" data-consent="' + q.consentKey + '"' + (A[q.consentKey] ? ' checked' : '') + '><span>' + esc(ui(q.consentKey)) + '</span></label>' +
+    '<div class="err"></div></div>';
+}
+
+// ------------------------------------------------------------------ 事件
+root.addEventListener('click', function(e){
+  const b = e.target.closest('[data-act]');
+  if (!b) return;
+  const act = b.getAttribute('data-act');
+  if (act === 'lang') { lang = b.getAttribute('data-lang'); render(); }
+  else if (act === 'start') { step = 1; render(); }
+  else if (act === 'back') { if (step > 1) { step--; render(); } else { step = 0; render(); } }
+  else if (act === 'next') { onNext(); }
+  else if (act === 'copy') {
+    const to = b.getAttribute('data-to'), from = b.getAttribute('data-from');
+    A[to] = A[from] || '';
+    const inp = document.getElementById(to); if (inp) inp.value = A[to];
+    clearErr(to);
+  }
+});
+
+root.addEventListener('change', function(e){
+  const t = e.target;
+  if (t.matches('input[type=radio][name]')) {
+    const id = t.name; A[id] = Q[id].tw.o[Number(t.value)];
+    t.closest('.opts').querySelectorAll('.opt').forEach(o => o.classList.toggle('on', o.querySelector('input').checked));
+    clearErr(id);
+    if (id === 'q18') refreshContacts();
+  } else if (t.matches('input[type=checkbox][name]')) {
+    const id = t.name, q = Q[id], v = q.tw.o[Number(t.value)];
+    let arr = (A[id] || []).slice();
+    if (t.checked) {
+      const limit = q.exact || q.max;
+      if (limit && arr.length >= limit) { t.checked = false; setErr(id, q.exact ? fmt(ui('exactly'), { n: q.exact }) : fmt(ui('max'), { n: q.max })); return; }
+      if (id === 'q16') { if (v === '都不方便') arr = []; else arr = arr.filter(x => x !== '都不方便'); }
+      arr.push(v);
+    } else arr = arr.filter(x => x !== v);
+    A[id] = arr;
+    const box = document.getElementById('box-' + id);
+    box.querySelectorAll('.opt').forEach(o => { const inp = o.querySelector('input'); inp.checked = arr.includes(q.tw.o[Number(inp.value)]); o.classList.toggle('on', inp.checked); });
+    clearErr(id);
+    if (id === 'q16') refreshContacts();
+  } else if (t.matches('[data-consent]')) {
+    const key = t.getAttribute('data-consent'); A[key] = t.checked;
+    clearErr(key === 'consent17' ? 'q17' : 'q19');
+  }
+});
+
+root.addEventListener('input', function(e){
+  const t = e.target;
+  if (t.matches('[data-alloc]')) {
+    A.q12 = A.q12 || {};
+    const raw = t.value.trim();
+    A.q12[t.getAttribute('data-alloc')] = raw === '' ? NaN : Math.max(0, Math.min(100, Math.floor(Number(raw))));
+    const tot = document.getElementById('allocTotal'); if (tot) tot.outerHTML = totalHtml();
+    clearErr('q12');
+  } else if (t.matches('[data-contact]')) {
+    const id = t.getAttribute('data-contact'); A[id] = t.value; clearErr(id);
+  }
+});
+
+function refreshContacts(){
+  ['q17', 'q19'].forEach(id => { const slot = document.getElementById('slot-' + id); if (slot) slot.innerHTML = contactHtml(id); });
+}
+function setErr(id, msg){ const box = document.getElementById('box-' + id); if (!box) return; box.classList.toggle('bad', !!msg); const el = box.querySelector('.err'); if (el) el.textContent = msg || ''; }
+function clearErr(id){ setErr(id, ''); const n = document.getElementById('navErr'); if (n) n.textContent = ''; }
+
+function validateSection(i){
+  let ok = true, firstBad = null;
+  SECTIONS[i].qs.forEach(id => {
+    const q = Q[id]; let err = '';
+    if (q.type === 'radio') { if (!A[id]) err = ui('req'); }
+    else if (q.type === 'check') {
+      const arr = A[id] || [];
+      if (q.exact) { if (arr.length !== q.exact) err = fmt(ui('exactly'), { n: q.exact }); }
+      else if (arr.length < 1) err = ui('req');
+      else if (q.max && arr.length > q.max) err = fmt(ui('max'), { n: q.max });
+    } else if (q.type === 'alloc') {
+      const all = FEATURES.every(f => A.q12 && Number.isFinite(A.q12[f.key]));
+      const s = allocSum();
+      if (!all || s !== 100) err = ui('sum') + s;
+    } else if (q.type === 'contact') {
+      if (q.show()) { if (!(A[id] || '').trim()) err = ui('contactReq'); else if (!A[q.consentKey]) err = ui('consentReq'); }
+    }
+    setErr(id, err);
+    if (err) { ok = false; if (!firstBad) firstBad = id; }
+  });
+  if (firstBad) { const box = document.getElementById('box-' + firstBad); if (box) box.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+  return ok;
+}
+
+function onNext(){
+  if (sending) return;
+  const i = step - 1;
+  if (!validateSection(i)) return;
+  if (step === 1 && A.q2 === '沒有') { submit('screened_out', 'out'); return; }
+  if (step === SECTIONS.length) { submit('completed', 'done'); return; }
+  step++; render();
+}
+
+function payload(status){
+  const has17 = Q.q17.show(), has19 = Q.q19.show();
+  return {
+    status, lang, src,
+    q1: A.q1 || '', q2: A.q2 || '', q3: A.q3 || '', q4: A.q4 || '', q5: A.q5 || '', q6: A.q6 || '',
+    q7: A.q7 || [], q8: A.q8 || '', q9: A.q9 || '', q10: A.q10 || '', q11: A.q11 || [],
+    q12: A.q12 || {}, q13: A.q13 || [], q14: A.q14 || '', q15: A.q15 || '',
+    q16: A.q16 || [], q17: has17 ? (A.q17 || '').trim() : '', consent17: has17 && !!A.consent17,
+    q18: A.q18 || '', q19: has19 ? (A.q19 || '').trim() : '', consent19: has19 && !!A.consent19,
+    hp: (document.getElementById('hp') || {}).value || '',
+    ua: navigator.userAgent.slice(0, 200)
+  };
+}
+
+// 把 payload 攤平成 Google Form 的欄位（陣列用「; 」串接，布林轉 yes / no）
+function toFormBody(d){
+  const E = CFG.form.entries;
+  const b = new URLSearchParams();
+  const put = (k, v) => { if (E[k] != null && v !== '' && v != null) b.append(E[k], String(v)); };
+  const j = (v) => (Array.isArray(v) ? v.join('; ') : v);
+  put('lang', d.lang); put('src', d.src); put('status', d.status);
+  ['q1','q2','q3','q4','q5','q6','q8','q9','q10','q14','q15'].forEach(k => put(k, d[k]));
+  put('q7', j(d.q7)); put('q11', j(d.q11)); put('q13', j(d.q13)); put('q16', j(d.q16));
+  if (d.status === 'completed') {
+    FEATURES.forEach(f => put('q12_' + f.key, Number(d.q12[f.key])));
+    put('q17_contact', d.q17); put('consent_q17', d.q17 ? (d.consent17 ? 'yes' : 'no') : '');
+    put('q18_lottery', d.q18); put('q19_contact', d.q19); put('consent_q19', d.q19 ? (d.consent19 ? 'yes' : 'no') : '');
+  }
+  put('ua', d.ua);
+  return b;
+}
+
+function send(data){
+  return new Promise((resolve, reject) => {
+    if (CFG.closed || new Date() > new Date(CFG.deadline)) { reject(new Error('closed')); return; }
+    if (data.hp) { setTimeout(() => resolve({ ok: true }), 300); return; } // honeypot：假裝成功
+    if (!CFG.form || !CFG.form.action) {
+      console.log('[survey] no form configured, payload:', data);
+      setTimeout(() => resolve({ ok: true, local: true }), 400);
+      return;
+    }
+    // Google Form 不回 CORS 標頭，用 no-cors 送出；回應是 opaque，沒有網路錯誤就視為成功。
+    fetch(CFG.form.action, { method: 'POST', mode: 'no-cors', body: toFormBody(data) })
+      .then(() => resolve({ ok: true }))
+      .catch(reject);
+  });
+}
+
+function submit(status, nextStep){
+  sending = true;
+  const btn = document.getElementById('nextBtn');
+  if (btn) { btn.disabled = true; btn.textContent = ui('sending'); }
+  send(payload(status)).then(() => { sending = false; step = nextStep; render(); })
+    .catch(err => {
+      sending = false;
+      if (btn) { btn.disabled = false; btn.textContent = step === SECTIONS.length ? ui('submit') : ui('next'); }
+      const msg = err && err.message === 'closed' ? ui('closedErr') : ui('fail') + (err && err.message ? '（' + err.message + '）' : '');
+      const n = document.getElementById('navErr'); if (n) n.textContent = msg;
+    });
+}
+
+// 啟動：先判斷是否截止；截止後再讀 results.json 決定要不要顯示得獎名單
+CFG.closed = params.get('preview') === 'closed' || new Date() > new Date(CFG.deadline);
+if (CFG.closed && CFG.resultsUrl) {
+  fetch(CFG.resultsUrl + '?t=' + Date.now(), { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(r => { CFG.results = r; render(); })
+    .catch(() => { CFG.results = null; render(); });
+} else {
+  render();
+}
+})();
+</script>
+</body>
+</html>
