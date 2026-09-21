@@ -41,8 +41,6 @@ h2{font-size:18px;margin:0 0 2px}
 .q.bad .err{display:block}
 .q.bad .opt{border-color:#F5C4CF}
 .q.bad input[type=text],.q.bad input[type=number]{border-color:#F5C4CF}
-.feat{margin:0 0 16px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
-.feat img{display:block;width:100%;height:auto}
 .alloc{display:grid;gap:10px}
 .arow{display:grid;grid-template-columns:1fr 84px;gap:12px;align-items:center;padding:12px;border:1.5px solid var(--line);border-radius:12px}
 .arow .name{font-weight:500;font-size:15px}
@@ -106,20 +104,26 @@ window.__SURVEY_CONFIG__ = {
   deadline: '2026-09-30T23:59:59+08:00',
   // 開獎後把 results.json 的 published 改成 true，頁面就會顯示得獎名單。
   resultsUrl: './results.json',
-  // 後端：Google 表單，回覆存入團隊的試算表
+  // 後端：Google 表單，回覆存入團隊的試算表。鍵名 = 表單裡的題目標題。
   form: {
     action: 'https://docs.google.com/forms/d/e/1FAIpQLScYCTdwAroBWImwHH0xhnYr5QB0mBOIXLFxXJwj0p78QDIC4g/formResponse',
     entries: {
-      lang: 'entry.1569782634', src: 'entry.1611745674', status: 'entry.947090115',
-      q1: 'entry.1530494205', q2: 'entry.1445314579', q3: 'entry.405020179', q4: 'entry.331367950',
-      q5: 'entry.433619572', q6: 'entry.786512799', q7: 'entry.1560732962', q8: 'entry.248808485',
-      q9: 'entry.421390225', q10: 'entry.410752225', q11: 'entry.812161359',
-      q12_schedule: 'entry.983984752', q12_photos: 'entry.2075284840', q12_creators: 'entry.121316758',
-      q12_translation: 'entry.929860562', q12_imagesearch: 'entry.562367560', q12_favorites: 'entry.1077360389',
-      q13: 'entry.628423868', q14: 'entry.1083918489', q15: 'entry.52973287', q16: 'entry.2138077538',
-      q17_contact: 'entry.2112600892', consent_q17: 'entry.1860590641',
-      q18_lottery: 'entry.1969354266', q19_contact: 'entry.1422301515', consent_q19: 'entry.994479672',
-      ua: 'entry.275447597'
+      lang: 'entry.1569782634', src: 'entry.1611745674', status: 'entry.947090115', ua: 'entry.275447597',
+      follows_gl: 'entry.1445314579', other_interests: 'entry.1530494205',
+      follow_style: 'entry.405020179', follow_count: 'entry.331367950',
+      region: 'entry.433619572', age: 'entry.786512799',
+      info_sources: 'entry.1560732962', tool_name: 'entry.38141746',
+      difficulty: 'entry.2067256994', check_freq: 'entry.248808485',
+      last_missed: 'entry.421390225', miss_reasons: 'entry.1356205250',
+      most_feared: 'entry.410752225', post_event: 'entry.812161359',
+      alloc_schedule: 'entry.983984752', alloc_photos: 'entry.2075284840',
+      alloc_creators: 'entry.121316758', alloc_translation: 'entry.929860562',
+      alloc_imagesearch: 'entry.562367560', alloc_favorites: 'entry.1077360389',
+      keep_two: 'entry.628423868', would_contribute: 'entry.52973287',
+      recruit: 'entry.2138077538',
+      contact_research: 'entry.2112600892', consent_research: 'entry.1860590641',
+      lottery: 'entry.1969354266',
+      contact_lottery: 'entry.1422301515', consent_lottery: 'entry.994479672'
     }
   },
   closed: false,
@@ -130,7 +134,7 @@ window.__SURVEY_CONFIG__ = {
 (function(){
 'use strict';
 const CFG = window.__SURVEY_CONFIG__ || {};
-const ASSET_FILES = {header:'header_2048x768.jpg',features:'features_1536x1024.jpg',s1:'section_01.jpg',s2:'section_02.jpg',s3:'section_03.jpg',s4:'section_04.jpg',s5:'section_05.jpg',s6:'section_06.jpg'};
+const ASSET_FILES = {header:'header_2048x768.jpg',s1:'section_01.jpg',s2:'section_02.jpg',s3:'section_03.jpg',s4:'section_04.jpg',s5:'section_05.jpg',s6:'section_06.jpg'};
 function asset(k){
   if (CFG.assets && CFG.assets[k]) return CFG.assets[k];
   return (CFG.assetBase || '') + ASSET_FILES[k];
@@ -141,7 +145,7 @@ let lang = String(CFG.lang || params.get('lang') || 'tw').toLowerCase();
 lang = (lang === 'cn' || lang === 'zh-cn' || lang === 'sc' || lang === 'zh-hans') ? 'cn' : 'tw';
 const src = String(CFG.src || params.get('src') || '').slice(0, 40);
 
-// ------------------------------------------------------------------ 文案
+// ------------------------------------------------------------------ 介面文案
 const UI = {
   tw: {
     title:'Thai GL 追星習慣問卷',
@@ -155,17 +159,19 @@ const UI = {
     closedTitle:'問卷已截止', closedMsg:'謝謝大家的參與 💗 抽獎結果將於 2026/10/3 22:00（台灣時間）公布在這個頁面，並私訊通知得獎者。',
     resultsTitle:'抽獎結果 🎁', resultsMsg:'恭喜以下得獎者！我們會依中獎順序私訊聯繫選擇獎品。為保護個資，聯絡方式僅部分揭露。',
     colRank:'順序', colContact:'聯絡方式', colPrize:'獎品', prizeTBD:'聯繫中',
-    step:'第 {a} / {b} 段', multi:'可複選', single:'單選', max:'最多 {n} 個', exactly:'請選 {n} 個',
-    contactPh:'X 帳號 / LINE ID / Email，擇一即可', sameAsAbove:'同上',
-    q17Hint:'只用於後續訪談或產品測試邀請。',
-    q19Hint:'只用於本次抽獎及得獎通知。',
-    consent17:'我同意此聯絡方式僅用於 FANTRACE 訪談或產品測試邀請，訪談與測試結束後刪除，不會提供給第三方。',
-    consent19:'我同意此聯絡方式僅用於本次抽獎及得獎通知，開獎日起 20 天內刪除，不會提供給第三方。',
+    step:'第 {a} / {b} 段', multi:'可複選', single:'單選', optional:'選填',
+    max:'最多 {n} 個', min:'請至少選 {n} 個', exactly:'請選 {n} 個',
+    contactPh:'X 帳號 / LINE ID / Email，擇一即可', toolPh:'網站或帳號名稱', sameAsAbove:'同上',
+    hint_contact_research:'只用於後續訪談或產品測試邀請。',
+    hint_contact_lottery:'只用於本次抽獎及得獎通知。',
+    hint_tool_name:'選填。想不起來名字可以留空。',
+    consent_research:'我同意此聯絡方式僅用於 FANTRACE 訪談或產品測試邀請，訪談與測試結束後刪除，不會提供給第三方。',
+    consent_lottery:'我同意此聯絡方式僅用於本次抽獎及得獎通知，開獎日起 20 天內刪除，不會提供給第三方。',
     lotteryTitle:'抽獎活動說明 🎁',
     lotteryIntro:'完成問卷並自願留下聯絡方式者，即可參加抽獎。',
     lotteryKV:[['問卷截止','2026/9/30 23:59（台灣時間）'],['開獎','2026/10/3 22:00（台灣時間）'],['名額','6 位，依中獎順序聯繫選擇獎品'],['公布','本頁面公布並私訊通知，不完整揭露聯絡資訊']],
     prizes:'獎品',
-    allocHint:'六格數字加總需為 100。可以參考上方的功能說明。'
+    allocHint:'六格數字加總需為 100。'
   },
   cn: {
     title:'Thai GL 追星习惯问卷',
@@ -179,88 +185,141 @@ const UI = {
     closedTitle:'问卷已截止', closedMsg:'谢谢大家的参与 💗 抽奖结果将于 2026/10/3 22:00（台湾时间）公布在这个页面，并私信通知获奖者。',
     resultsTitle:'抽奖结果 🎁', resultsMsg:'恭喜以下获奖者！我们会按中奖顺序私信联系选择奖品。为保护个人信息，联系方式仅部分公开。',
     colRank:'顺序', colContact:'联系方式', colPrize:'奖品', prizeTBD:'联系中',
-    step:'第 {a} / {b} 段', multi:'可多选', single:'单选', max:'最多 {n} 个', exactly:'请选 {n} 个',
-    contactPh:'X 账号 / LINE ID / Email，择一即可', sameAsAbove:'同上',
-    q17Hint:'只用于后续访谈或产品测试邀请。',
-    q19Hint:'只用于本次抽奖及获奖通知。',
-    consent17:'我同意此联系方式仅用于 FANTRACE 访谈或产品测试邀请，访谈与测试结束后删除，不会提供给第三方。',
-    consent19:'我同意此联系方式仅用于本次抽奖及获奖通知，开奖日起 20 天内删除，不会提供给第三方。',
+    step:'第 {a} / {b} 段', multi:'可多选', single:'单选', optional:'选填',
+    max:'最多 {n} 个', min:'请至少选 {n} 个', exactly:'请选 {n} 个',
+    contactPh:'X 账号 / LINE ID / Email，择一即可', toolPh:'网站或账号名称', sameAsAbove:'同上',
+    hint_contact_research:'只用于后续访谈或产品测试邀请。',
+    hint_contact_lottery:'只用于本次抽奖及获奖通知。',
+    hint_tool_name:'选填。想不起来名字可以留空。',
+    consent_research:'我同意此联系方式仅用于 FANTRACE 访谈或产品测试邀请，访谈与测试结束后删除，不会提供给第三方。',
+    consent_lottery:'我同意此联系方式仅用于本次抽奖及获奖通知，开奖日起 20 天内删除，不会提供给第三方。',
     lotteryTitle:'抽奖活动说明 🎁',
     lotteryIntro:'完成问卷并自愿留下联系方式者，即可参加抽奖。',
     lotteryKV:[['问卷截止','2026/9/30 23:59（台湾时间）'],['开奖','2026/10/3 22:00（台湾时间）'],['名额','6 位，按中奖顺序联系选择奖品'],['公布','本页面公布并私信通知，不完整公开联系信息']],
     prizes:'奖品',
-    allocHint:'六格数字加总需为 100。可以参考上方的功能说明。'
+    allocHint:'六格数字加总需为 100。'
   }
 };
 
+// ------------------------------------------------------------------ 分段
 const SECTIONS = [
-  { img:'s1', tw:'先確認一下',        cn:'先确认一下',        qs:['q1','q2'] },
-  { img:'s2', tw:'關於妳的追星日常',   cn:'关于你的追星日常',   qs:['q3','q4','q5','q6','q7'] },
-  { img:'s3', tw:'妳平常怎麼追活動？', cn:'你平常怎么追活动？', qs:['q8','q9','q10','q11'] },
-  { img:'s4', tw:'如果是妳，會怎麼選？', cn:'如果是你，会怎么选？', qs:['q12','q13'], feat:true },
-  { img:'s5', tw:'這樣的工具，妳會用嗎？', cn:'这样的工具，你会用吗？', qs:['q14','q15'] },
-  { img:'s6', tw:'最後一小步',        cn:'最后一小步',        qs:['q16','q17','q18','q19'] }
+  { img:'s1', tw:'先確認一下',          cn:'先确认一下',        qs:['follows_gl','other_interests'] },
+  { img:'s2', tw:'關於妳的追星日常',     cn:'关于你的追星日常',   qs:['follow_style','follow_count','region','age','info_sources','tool_name'] },
+  { img:'s3', tw:'妳平常怎麼追活動？',   cn:'你平常怎么追活动？', qs:['difficulty','check_freq','last_missed','miss_reasons','most_feared','post_event'] },
+  { img:'s4', tw:'如果是妳，會怎麼選？', cn:'如果是你，会怎么选？', qs:['alloc','keep_two'] },
+  { img:'s5', tw:'這樣的工具，妳會用嗎？', cn:'这样的工具，你会用吗？', qs:['would_contribute'] },
+  { img:'s6', tw:'最後一小步',          cn:'最后一小步',        qs:['recruit','contact_research','lottery','contact_lottery'] }
 ];
 
-// 功能定義（Q12 / Q13 共用）。tw.n 是寫進試算表的正式值。
+// 六項配點。key = 表單欄位名。標籤（n）是寫進試算表的正式值，描述改為中性，不用 emoji。
 const FEATURES = [
-  { key:'schedule',    icon:'📅', tw:{ n:'多 CP 行程整合',   d:'把妳追的不同藝人／CP 的實體活動、直播、品牌活動等行程集中在同一個地方，不用分別追不同官方、後援會和群組。' },
-                                  cn:{ n:'多 CP 行程整合',   d:'把你追的不同艺人／CP 的线下活动、直播、品牌活动等行程集中在同一个地方，不用分别追不同官方、后援会和群组。' } },
-  { key:'photos',      icon:'📷', tw:{ n:'活動照片整理',     d:'點進某一場活動，就能集中找到這場活動相關的飯拍、官方照片等內容。' },
-                                  cn:{ n:'活动照片整理',     d:'点进某一场活动，就能集中找到这场活动相关的饭拍、官方照片等内容。' } },
-  { key:'creators',    icon:'📸', tw:{ n:'攝影者／站姐索引', d:'可以知道某一場活動有哪些站姐／攝影者有拍，並找到她們的帳號及原始貼文。' },
-                                  cn:{ n:'摄影者／站姐索引', d:'可以知道某一场活动有哪些站姐／摄影者拍了，并找到她们的账号及原始帖子。' } },
-  { key:'translation', icon:'🌏', tw:{ n:'影片翻譯',         d:'活動訪問、直播、飯拍影片等泰文內容，可以查看中文／其他語言翻譯或摘要。' },
-                                  cn:{ n:'视频翻译',         d:'活动采访、直播、饭拍视频等泰文内容，可以查看中文／其他语言翻译或摘要。' } },
-  { key:'imagesearch', icon:'🔎', tw:{ n:'圖片辨識搜尋',     d:'丟一張不知道來源的藝人照片，幫妳找「這是哪場活動、什麼日期、可能是哪位攝影者拍的」。' },
-                                  cn:{ n:'图片识别搜索',     d:'丢一张不知道来源的艺人照片，帮你找“这是哪场活动、什么日期、可能是哪位摄影者拍的”。' } },
-  { key:'favorites',   icon:'❤️', tw:{ n:'收藏',             d:'把喜歡的活動、照片、影片或攝影者收藏到自己的資料夾，之後可以快速找回。' },
-                                  cn:{ n:'收藏',             d:'把喜欢的活动、照片、视频或摄影者收藏到自己的文件夹，之后可以快速找回。' } }
+  { key:'alloc_schedule',    tw:{ n:'多 CP 行程整合',   d:'不同藝人／CP 的活動、直播、品牌行程在同一處呈現' },
+                             cn:{ n:'多 CP 行程整合',   d:'不同艺人／CP 的活动、直播、品牌行程在同一处呈现' } },
+  { key:'alloc_photos',      tw:{ n:'活動照片整理',     d:'單一場活動的飯拍與官方照片集中在一起' },
+                             cn:{ n:'活动照片整理',     d:'单一场活动的饭拍与官方照片集中在一起' } },
+  { key:'alloc_creators',    tw:{ n:'攝影者／站姐索引', d:'查詢某場活動有哪些站姐／攝影者拍攝，以及其帳號與原始貼文' },
+                             cn:{ n:'摄影者／站姐索引', d:'查询某场活动有哪些站姐／摄影者拍摄，以及其账号与原始帖子' } },
+  { key:'alloc_translation', tw:{ n:'影片翻譯',         d:'泰文的訪問、直播、飯拍影片提供中文／其他語言翻譯或摘要' },
+                             cn:{ n:'视频翻译',         d:'泰文的采访、直播、饭拍视频提供中文／其他语言翻译或摘要' } },
+  { key:'alloc_imagesearch', tw:{ n:'圖片辨識搜尋',     d:'用一張照片查出處（場次、日期、拍攝者）' },
+                             cn:{ n:'图片识别搜索',     d:'用一张照片查出处（场次、日期、拍摄者）' } },
+  { key:'alloc_favorites',   tw:{ n:'收藏',             d:'將活動、照片、影片或攝影者存入個人資料夾' },
+                             cn:{ n:'收藏',             d:'将活动、照片、视频或摄影者存入个人文件夹' } }
 ];
 
-// 題目。tw.o 是寫進試算表的正式值；cn.o 只負責顯示。
+// ------------------------------------------------------------------ 題目
+// 鍵名 = 表單欄位名。tw.o 是寫進試算表的正式值，cn.o 只負責顯示。
 const Q = {
-  q1:  { type:'radio', tw:{ t:'妳目前主要追的是哪一類？', o:['泰國 GL','泰國其他（演員 / 歌手 / 團體）','韓星','日星','體育','其他'] },
-                       cn:{ t:'你目前主要追的是哪一类？', o:['泰国 GL','泰国其他（演员 / 歌手 / 团体）','韩星','日星','体育','其他'] } },
-  q2:  { type:'radio', tw:{ t:'妳有沒有固定追蹤的泰國 GL CP 或藝人？', o:['有','沒有'] },
-                       cn:{ t:'你有没有固定关注的泰国 GL CP 或艺人？', o:['有','没有'] } },
-  q3:  { type:'radio', tw:{ t:'妳追星的方式比較接近哪種？', o:['主要追 CP','主要追單人藝人','兩種都有'] },
-                       cn:{ t:'你追星的方式比较接近哪种？', o:['主要追 CP','主要追单人艺人','两种都有'] } },
-  q4:  { type:'radio', tw:{ t:'目前同時固定追蹤幾組 CP 或幾位藝人？', o:['1','2–3','4–5','5 以上'] },
-                       cn:{ t:'目前同时固定关注几组 CP 或几位艺人？', o:['1','2–3','4–5','5 以上'] } },
-  q5:  { type:'radio', tw:{ t:'妳的所在地區？', o:['台灣','中國大陸','香港 / 澳門','馬來西亞 / 新加坡','泰國','其他'] },
-                       cn:{ t:'你的所在地区？', o:['台湾','中国大陆','香港 / 澳门','马来西亚 / 新加坡','泰国','其他'] } },
-  q6:  { type:'radio', tw:{ t:'年齡層？', o:['18 以下','18–24','25–30','31–35','35 以上'] },
-                       cn:{ t:'年龄层？', o:['18 以下','18–24','25–30','31–35','35 以上'] } },
-  q7:  { type:'check', tw:{ t:'平常主要從哪裡得知推的行程？', o:['藝人官方 X','經紀公司 / 劇組官方帳號','後援會 / 站子','微信群 / LINE 群','Instagram','Threads','朋友私訊轉發','其他'] },
-                       cn:{ t:'平常主要从哪里得知推的行程？', o:['艺人官方 X','经纪公司 / 剧组官方账号','后援会 / 站子','微信群 / LINE 群','Instagram','Threads','朋友私信转发','其他'] } },
-  q8:  { type:'radio', tw:{ t:'一週大概查幾次明星的行程？', o:['幾乎不查，看到再說','每週 1–2 次','每週 3–5 次','每天','每天多次'] },
-                       cn:{ t:'一周大概查几次明星的行程？', o:['几乎不查，看到再说','每周 1–2 次','每周 3–5 次','每天','每天多次'] } },
-  q9:  { type:'radio', tw:{ t:'上一次漏掉的活動或直播，是多久以前？', o:['一週內','一個月內','三個月內','更久以前','沒有漏掉過'] },
-                       cn:{ t:'上一次漏掉的活动或直播，是多久以前？', o:['一周内','一个月内','三个月内','更久以前','没有漏掉过'] } },
-  q10: { type:'radio', tw:{ t:'最怕漏掉的是哪一種？', o:['直播','見面會 / 簽售','演唱會 / Fan Meeting','品牌活動 / 記者會','節目或劇集播出','頒獎典禮','粉絲企劃 / 應援','其他'] },
-                       cn:{ t:'最怕漏掉的是哪一种？', o:['直播','见面会 / 签售','演唱会 / Fan Meeting','品牌活动 / 记者会','节目或剧集播出','颁奖典礼','粉丝企划 / 应援','其他'] } },
-  q11: { type:'check', max:3, tw:{ t:'活動結束後，妳最常找什麼？', o:['飯拍照片（含站姊、常追線下的粉絲所拍攝）','現場影片','影片翻譯','官方照片','新聞 / 報導','其他粉絲的心得','不特別找'] },
-                              cn:{ t:'活动结束后，你最常找什么？', o:['饭拍照片（含站姐、常追线下的粉丝所拍摄）','现场视频','视频翻译','官方照片','新闻 / 报道','其他粉丝的心得','不特别找'] } },
-  q12: { type:'alloc', tw:{ t:'如果妳有 100 分可以分配，妳會怎麼分給以下功能？' }, cn:{ t:'如果你有 100 分可以分配，你会怎么分给以下功能？' } },
-  q13: { type:'check', exact:2, tw:{ t:'如果只能留兩個功能，妳會留哪兩個？' }, cn:{ t:'如果只能留两个功能，你会留哪两个？' } },
-  q14: { type:'radio', tw:{ t:'如果有一個地方集中整理妳追的所有 CP 行程，妳會多常看？', o:['每天','每週幾次','有活動時才看','應該不會用'] },
-                       cn:{ t:'如果有一个地方集中整理你追的所有 CP 行程，你会多常看？', o:['每天','每周几次','有活动时才看','应该不会用'] } },
-  q15: { type:'radio', tw:{ t:'如果發現行程漏了一場，妳願意自己幫忙補上嗎？', o:['願意','看情況','不願意'] },
-                       cn:{ t:'如果发现行程漏了一场，你愿意自己帮忙补上吗？', o:['愿意','看情况','不愿意'] } },
-  q16: { type:'check', tw:{ t:'願不願意參加 30 分鐘訪談，或兩週的行程頁測試？', o:['願意參加訪談','願意參加測試','都不方便'] },
-                       cn:{ t:'愿不愿意参加 30 分钟访谈，或两周的行程页测试？', o:['愿意参加访谈','愿意参加测试','都不方便'] } },
-  q17: { type:'contact', consentKey:'consent17', hintKey:'q17Hint', show:() => (A.q16 || []).some(v => v !== '都不方便'),
-         tw:{ t:'訪談／測試聯絡方式' }, cn:{ t:'访谈／测试联系方式' } },
-  q18: { type:'radio', lottery:true,
-         tw:{ t:'是否參加本次問卷抽獎？', o:['願意參加','不參加'], p:['GR 初版小說','Any 皮質吊牌','官方明信片（影單人 ×1、繆妮單人 ×1）','2026 BBFF 小卡 奶愛一套','2026 BBFF 小卡 帕風一套','2026 BBFF 小卡 景米一套'] },
-         cn:{ t:'是否参加本次问卷抽奖？', o:['愿意参加','不参加'], p:['GR 初版小说','Any 皮质吊牌','官方明信片（影单人 ×1、缪妮单人 ×1）','2026 BBFF 小卡 奶爱一套','2026 BBFF 小卡 帕风一套','2026 BBFF 小卡 景米一套'] } },
-  q19: { type:'contact', consentKey:'consent19', hintKey:'q19Hint', copyFrom:'q17', show:() => A.q18 === '願意參加',
-         tw:{ t:'抽獎聯絡方式' }, cn:{ t:'抽奖联系方式' } }
+  follows_gl: { type:'radio',
+    tw:{ t:'妳目前有固定追蹤的泰國 GL CP 或藝人嗎？', o:['有，目前有固定追蹤','以前有，但現在比較少追','從來沒有'] },
+    cn:{ t:'你目前有固定关注的泰国 GL CP 或艺人吗？', o:['有，目前有固定关注','以前有，但现在比较少追','从来没有'] } },
+
+  other_interests: { type:'check',
+    show:() => A.follows_gl !== '從來沒有',
+    tw:{ t:'除了泰國 GL 之外，妳平常還會關注哪些類型？', o:['沒有，主要只追泰國 GL','泰國 BL','泰國其他藝人／演員／歌手','韓國藝人／偶像','日本藝人／偶像','中國大陸／港台藝人','體育選手／隊伍','其他'] },
+    cn:{ t:'除了泰国 GL 之外，你平常还会关注哪些类型？', o:['没有，主要只追泰国 GL','泰国 BL','泰国其他艺人／演员／歌手','韩国艺人／偶像','日本艺人／偶像','中国大陆／港台艺人','体育选手／队伍','其他'] } },
+
+  follow_style: { type:'radio',
+    tw:{ t:'妳追星的方式比較接近哪種？', o:['主要追 CP','主要追單人藝人','兩種都有'] },
+    cn:{ t:'你追星的方式比较接近哪种？', o:['主要追 CP','主要追单人艺人','两种都有'] } },
+
+  follow_count: { type:'radio',
+    tw:{ t:'目前同時固定追蹤幾組 CP 或幾位藝人？', o:['1','2–3','4–5','6–10','11 組以上'] },
+    cn:{ t:'目前同时固定关注几组 CP 或几位艺人？', o:['1','2–3','4–5','6–10','11 组以上'] } },
+
+  region: { type:'radio',
+    tw:{ t:'妳的所在地區？', o:['台灣','中國大陸','香港 / 澳門','馬來西亞 / 新加坡','泰國','其他'] },
+    cn:{ t:'你的所在地区？', o:['台湾','中国大陆','香港 / 澳门','马来西亚 / 新加坡','泰国','其他'] } },
+
+  age: { type:'radio',
+    tw:{ t:'年齡層？', o:['18 以下','18–24','25–30','31–35','35 以上'] },
+    cn:{ t:'年龄层？', o:['18 以下','18–24','25–30','31–35','35 以上'] } },
+
+  info_sources: { type:'check',
+    tw:{ t:'平常主要從哪裡得知推的行程？', o:['藝人官方 X','經紀公司 / 劇組官方帳號','後援會 / 站子','LINE 群、微信群','Instagram','Threads','粉絲整理的追劇日曆／資訊網站','朋友私訊轉發','其他'] },
+    cn:{ t:'平常主要从哪里得知推的行程？', o:['艺人官方 X','经纪公司 / 剧组官方账号','后援会 / 站子','LINE 群、微信群','Instagram','Threads','粉丝整理的追剧日历／资讯网站','朋友私信转发','其他'] } },
+
+  tool_name: { type:'text', optional:true, phKey:'toolPh', hintKey:'hint_tool_name',
+    show:() => (A.info_sources || []).includes('粉絲整理的追劇日曆／資訊網站'),
+    tw:{ t:'如果有，方便告訴我們是哪一個嗎？' }, cn:{ t:'如果有，方便告诉我们是哪一个吗？' } },
+
+  difficulty: { type:'radio',
+    tw:{ t:'妳目前要掌握自己追的 CP／藝人行程，覺得麻煩嗎？', o:['完全不麻煩','不太麻煩','普通','有點麻煩','非常麻煩'] },
+    cn:{ t:'你目前要掌握自己追的 CP／艺人行程，觉得麻烦吗？', o:['完全不麻烦','不太麻烦','普通','有点麻烦','非常麻烦'] } },
+
+  check_freq: { type:'radio',
+    tw:{ t:'一週大概查幾次明星的行程？', o:['幾乎不查，看到再說','每週 1–2 次','每週 3–5 次','每天','每天多次'] },
+    cn:{ t:'一周大概查几次明星的行程？', o:['几乎不查，看到再说','每周 1–2 次','每周 3–5 次','每天','每天多次'] } },
+
+  last_missed: { type:'radio',
+    tw:{ t:'上一次漏掉的活動或直播，是多久以前？', o:['一週內','一個月內','三個月內','更久以前','沒有漏掉過','不確定、想不起來'] },
+    cn:{ t:'上一次漏掉的活动或直播，是多久以前？', o:['一周内','一个月内','三个月内','更久以前','没有漏掉过','不确定、想不起来'] } },
+
+  miss_reasons: { type:'check', max:3,
+    show:() => !!A.last_missed && A.last_missed !== '沒有漏掉過',
+    tw:{ t:'妳通常為什麼會漏掉活動／直播？', o:['官方公告太晚／太突然','不同 CP 的資訊散落在不同帳號','沒看到 X／IG 的貼文','後援會／群組訊息太多，被洗掉了','記得有活動，但忘記時間','時區／海外活動時間不好確認','臨時新增或更改行程','不知道這場活動有沒有直播'] },
+    cn:{ t:'你通常为什么会漏掉活动／直播？', o:['官方公告太晚／太突然','不同 CP 的资讯散落在不同账号','没看到 X／IG 的帖子','后援会／群组消息太多，被刷掉了','记得有活动，但忘记时间','时区／海外活动时间不好确认','临时新增或更改行程','不知道这场活动有没有直播'] } },
+
+  most_feared: { type:'check', min:2, max:3,
+    tw:{ t:'最怕漏掉的是哪一種？', o:['直播','見面會 / 簽售','演唱會 / Fan Meeting','品牌活動 / 記者會','節目或劇集播出','頒獎典禮','粉絲企劃 / 應援','其他'] },
+    cn:{ t:'最怕漏掉的是哪一种？', o:['直播','见面会 / 签售','演唱会 / Fan Meeting','品牌活动 / 记者会','节目或剧集播出','颁奖典礼','粉丝企划 / 应援','其他'] } },
+
+  post_event: { type:'check', max:3,
+    tw:{ t:'活動結束後，妳最常找什麼？', o:['飯拍照片（含站姊、常追線下的粉絲所拍攝）','現場影片','影片翻譯','官方照片','新聞 / 報導','其他粉絲的心得','不特別找'] },
+    cn:{ t:'活动结束后，你最常找什么？', o:['饭拍照片（含站姐、常追线下的粉丝所拍摄）','现场视频','视频翻译','官方照片','新闻 / 报道','其他粉丝的心得','不特别找'] } },
+
+  alloc: { type:'alloc',
+    tw:{ t:'在追星的資訊需求上，以下六件事對妳的重要程度。請分配 100 分（總和 100）。' },
+    cn:{ t:'在追星的信息需求上，以下六件事对你的重要程度。请分配 100 分（总和 100）。' } },
+
+  keep_two: { type:'check', exact:2,
+    tw:{ t:'如果只能留兩個，妳會留哪兩個？' }, cn:{ t:'如果只能留两个，你会留哪两个？' } },
+
+  would_contribute: { type:'radio',
+    tw:{ t:'如果發現行程漏了一場，妳願意自己幫忙補上嗎？', o:['願意','看情況','不願意'] },
+    cn:{ t:'如果发现行程漏了一场，你愿意自己帮忙补上吗？', o:['愿意','看情况','不愿意'] } },
+
+  recruit: { type:'check',
+    tw:{ t:'願不願意參加 30 分鐘訪談，或兩週的行程頁測試？', o:['願意參加訪談','願意參加測試','都不方便'] },
+    cn:{ t:'愿不愿意参加 30 分钟访谈，或两周的行程页测试？', o:['愿意参加访谈','愿意参加测试','都不方便'] } },
+
+  contact_research: { type:'contact', consentKey:'consent_research', hintKey:'hint_contact_research',
+    show:() => (A.recruit || []).some(v => v !== '都不方便'),
+    tw:{ t:'訪談／測試聯絡方式' }, cn:{ t:'访谈／测试联系方式' } },
+
+  lottery: { type:'radio', lottery:true,
+    tw:{ t:'是否參加本次問卷抽獎？', o:['願意參加','不參加'], p:['GR 初版小說','Any 皮質吊牌','官方明信片（影單人 ×1、繆妮單人 ×1）','2026 BBFF 小卡 奶愛一套','2026 BBFF 小卡 帕風一套','2026 BBFF 小卡 景米一套'] },
+    cn:{ t:'是否参加本次问卷抽奖？', o:['愿意参加','不参加'], p:['GR 初版小说','Any 皮质吊牌','官方明信片（影单人 ×1、缪妮单人 ×1）','2026 BBFF 小卡 奶爱一套','2026 BBFF 小卡 帕风一套','2026 BBFF 小卡 景米一套'] } },
+
+  contact_lottery: { type:'contact', consentKey:'consent_lottery', hintKey:'hint_contact_lottery', copyFrom:'contact_research',
+    show:() => A.lottery === '願意參加',
+    tw:{ t:'抽獎聯絡方式' }, cn:{ t:'抽奖联系方式' } }
 };
-Q.q13.tw.o = FEATURES.map(f => f.tw.n);
-Q.q13.cn.o = FEATURES.map(f => f.cn.n);
-const NUM = { q1:1,q2:2,q3:3,q4:4,q5:5,q6:6,q7:7,q8:8,q9:9,q10:10,q11:11,q12:12,q13:13,q14:14,q15:15,q16:16,q17:17,q18:18,q19:19 };
+Q.keep_two.tw.o = FEATURES.map(f => f.tw.n);
+Q.keep_two.cn.o = FEATURES.map(f => f.cn.n);
+
+const QKEYS = SECTIONS.reduce((a, s) => a.concat(s.qs), []);
+const NUM = {}; QKEYS.forEach((k, i) => { NUM[k] = i + 1; });
 
 // ------------------------------------------------------------------ 狀態
 const A = {};          // answers（值一律存繁體正式字串）
@@ -271,7 +330,8 @@ const root = document.getElementById('app');
 function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function ui(k){ return UI[lang][k]; }
 function fmt(s, o){ return s.replace(/\{(\w+)\}/g, (_, k) => o[k]); }
-function allocSum(){ return FEATURES.reduce((s, f) => s + (A.q12 && Number.isFinite(A.q12[f.key]) ? A.q12[f.key] : 0), 0); }
+function visible(id){ const q = Q[id]; return !q.show || q.show(); }
+function allocSum(){ return FEATURES.reduce((s, f) => s + (A.alloc && Number.isFinite(A.alloc[f.key]) ? A.alloc[f.key] : 0), 0); }
 
 // ------------------------------------------------------------------ 畫面
 function render(){
@@ -327,8 +387,7 @@ function sectionHtml(i){
   html += '<div class="progress">' + SECTIONS.map((_, k) => '<i class="' + (k <= i ? 'on' : '') + '"></i>').join('') + '</div>';
   html += '<p class="step">' + esc(fmt(ui('step'), { a: i + 1, b: SECTIONS.length })) + '</p>';
   html += '<h2>' + esc(s[lang]) + '</h2>';
-  if (s.feat) html += '<div class="feat"><img src="' + esc(asset('features')) + '" alt=""></div>';
-  s.qs.forEach((id, k) => { html += qHtml(id, k === 0); });
+  s.qs.forEach((id, k) => { html += '<div id="slot-' + id + '">' + qHtml(id, k === 0) + '</div>'; });
   const last = i === SECTIONS.length - 1;
   html += '<div class="nav">' +
     '<button type="button" class="btn s" data-act="back">' + esc(ui('back')) + '</button>' +
@@ -338,14 +397,26 @@ function sectionHtml(i){
   return html;
 }
 
+function hintFor(q){
+  if (q.type === 'radio') return ui('single');
+  if (q.type === 'alloc') return ui('allocHint');
+  if (q.type === 'check') {
+    if (q.exact) return fmt(ui('exactly'), { n: q.exact });
+    const parts = [ui('multi')];
+    if (q.min) parts.push(fmt(ui('min'), { n: q.min }));
+    if (q.max) parts.push(fmt(ui('max'), { n: q.max }));
+    return parts.join('，');
+  }
+  if (q.type === 'text') return q.hintKey ? ui(q.hintKey) : ui('optional');
+  return '';
+}
+
 function qHtml(id, first){
-  const q = Q[id], L = q[lang];
-  if (q.type === 'contact') return '<div id="slot-' + id + '">' + contactHtml(id) + '</div>';
+  const q = Q[id];
+  if (!visible(id)) return '';
+  if (q.type === 'contact') return contactHtml(id, first);
+  const L = q[lang];
   let inner = '';
-  let hint = '';
-  if (q.type === 'radio') hint = ui('single');
-  else if (q.type === 'check') hint = q.exact ? fmt(ui('exactly'), { n: q.exact }) : (q.max ? ui('multi') + '，' + fmt(ui('max'), { n: q.max }) : ui('multi'));
-  else if (q.type === 'alloc') hint = ui('allocHint');
 
   if (q.type === 'radio' || q.type === 'check') {
     const isCheck = q.type === 'check';
@@ -358,12 +429,16 @@ function qHtml(id, first){
     if (q.lottery) inner = lotteryHtml(L.p) + inner;
   } else if (q.type === 'alloc') {
     inner = '<div class="alloc">' + FEATURES.map(f => {
-      const v = A.q12 && Number.isFinite(A.q12[f.key]) ? A.q12[f.key] : '';
-      return '<div class="arow"><div><div class="name">' + f.icon + ' ' + esc(f[lang].n) + '</div><div class="def">' + esc(f[lang].d) + '</div></div>' +
+      const v = A.alloc && Number.isFinite(A.alloc[f.key]) ? A.alloc[f.key] : '';
+      return '<div class="arow"><div><div class="name">' + esc(f[lang].n) + '</div><div class="def">' + esc(f[lang].d) + '</div></div>' +
         '<input type="number" inputmode="numeric" min="0" max="100" step="1" data-alloc="' + f.key + '" value="' + v + '" aria-label="' + esc(f[lang].n) + '"></div>';
     }).join('') + '</div>' + totalHtml();
+  } else if (q.type === 'text') {
+    inner = '<div class="row"><input type="text" id="' + id + '" data-text="' + id + '" maxlength="200" placeholder="' + esc(ui(q.phKey || 'toolPh')) + '" value="' + esc(A[id] || '') + '" autocomplete="off"></div>';
   }
-  return '<div class="q' + (first ? ' first' : '') + '" id="box-' + id + '">' +
+
+  const hint = hintFor(q);
+  return '<div class="q' + (first ? ' first' : '') + (q.type === 'text' ? ' text' : '') + '" id="box-' + id + '">' +
     '<p class="t"><span class="n">Q' + NUM[id] + '</span>' + esc(L.t) + '</p>' +
     (hint ? '<p class="h">' + esc(hint) + '</p>' : '') + inner +
     '<div class="err"></div></div>';
@@ -382,17 +457,17 @@ function totalHtml(){
   return '<div class="total ' + cls + '" id="allocTotal"><span>' + esc(ui('sumLabel')) + '</span><b>' + s + ' / 100</b></div>';
 }
 
-function contactHtml(id){
+function contactHtml(id, first){
   const q = Q[id];
-  if (!q.show()) return '';
+  if (!visible(id)) return '';
   const L = q[lang];
-  const canCopy = q.copyFrom && Q[q.copyFrom].show() && (A[q.copyFrom] || '').trim();
-  return '<div class="q text" id="box-' + id + '">' +
+  const canCopy = q.copyFrom && visible(q.copyFrom) && (A[q.copyFrom] || '').trim();
+  return '<div class="q text' + (first ? ' first' : '') + '" id="box-' + id + '">' +
     '<p class="t"><span class="n">Q' + NUM[id] + '</span>' + esc(L.t) + '</p>' +
     '<p class="h">' + esc(ui(q.hintKey)) + '</p>' +
-    '<div class="row"><input type="text" id="' + id + '" data-contact="' + id + '" maxlength="200" placeholder="' + esc(ui('contactPh')) + '" value="' + esc(A[id] || '') + '" autocomplete="off">' +
+    '<div class="row"><input type="text" id="' + id + '" data-text="' + id + '" maxlength="200" placeholder="' + esc(ui('contactPh')) + '" value="' + esc(A[id] || '') + '" autocomplete="off">' +
     (canCopy ? '<button type="button" class="mini" data-act="copy" data-from="' + q.copyFrom + '" data-to="' + id + '">' + esc(ui('sameAsAbove')) + '</button>' : '') + '</div>' +
-    '<label class="consent"><input type="checkbox" id="' + q.consentKey + '" data-consent="' + q.consentKey + '"' + (A[q.consentKey] ? ' checked' : '') + '><span>' + esc(ui(q.consentKey)) + '</span></label>' +
+    '<label class="consent"><input type="checkbox" data-consent="' + q.consentKey + '"' + (A[q.consentKey] ? ' checked' : '') + '><span>' + esc(ui(q.consentKey)) + '</span></label>' +
     '<div class="err"></div></div>';
 }
 
@@ -419,62 +494,80 @@ root.addEventListener('change', function(e){
     const id = t.name; A[id] = Q[id].tw.o[Number(t.value)];
     t.closest('.opts').querySelectorAll('.opt').forEach(o => o.classList.toggle('on', o.querySelector('input').checked));
     clearErr(id);
-    if (id === 'q18') refreshContacts();
+    refreshConditionals();
   } else if (t.matches('input[type=checkbox][name]')) {
     const id = t.name, q = Q[id], v = q.tw.o[Number(t.value)];
     let arr = (A[id] || []).slice();
     if (t.checked) {
       const limit = q.exact || q.max;
-      if (limit && arr.length >= limit) { t.checked = false; setErr(id, q.exact ? fmt(ui('exactly'), { n: q.exact }) : fmt(ui('max'), { n: q.max })); return; }
-      if (id === 'q16') { if (v === '都不方便') arr = []; else arr = arr.filter(x => x !== '都不方便'); }
+      if (limit && arr.length >= limit) {
+        t.checked = false;
+        setErr(id, q.exact ? fmt(ui('exactly'), { n: q.exact }) : fmt(ui('max'), { n: q.max }));
+        return;
+      }
+      if (id === 'recruit') { if (v === '都不方便') arr = []; else arr = arr.filter(x => x !== '都不方便'); }
+      if (id === 'other_interests') { if (v === '沒有，主要只追泰國 GL') arr = []; else arr = arr.filter(x => x !== '沒有，主要只追泰國 GL'); }
+      if (id === 'post_event') { if (v === '不特別找') arr = []; else arr = arr.filter(x => x !== '不特別找'); }
       arr.push(v);
     } else arr = arr.filter(x => x !== v);
     A[id] = arr;
     const box = document.getElementById('box-' + id);
-    box.querySelectorAll('.opt').forEach(o => { const inp = o.querySelector('input'); inp.checked = arr.includes(q.tw.o[Number(inp.value)]); o.classList.toggle('on', inp.checked); });
+    if (box) box.querySelectorAll('.opt').forEach(o => { const inp = o.querySelector('input'); inp.checked = arr.includes(q.tw.o[Number(inp.value)]); o.classList.toggle('on', inp.checked); });
     clearErr(id);
-    if (id === 'q16') refreshContacts();
+    refreshConditionals();
   } else if (t.matches('[data-consent]')) {
     const key = t.getAttribute('data-consent'); A[key] = t.checked;
-    clearErr(key === 'consent17' ? 'q17' : 'q19');
+    clearErr(key === 'consent_research' ? 'contact_research' : 'contact_lottery');
   }
 });
 
 root.addEventListener('input', function(e){
   const t = e.target;
   if (t.matches('[data-alloc]')) {
-    A.q12 = A.q12 || {};
+    A.alloc = A.alloc || {};
     const raw = t.value.trim();
-    A.q12[t.getAttribute('data-alloc')] = raw === '' ? NaN : Math.max(0, Math.min(100, Math.floor(Number(raw))));
+    A.alloc[t.getAttribute('data-alloc')] = raw === '' ? NaN : Math.max(0, Math.min(100, Math.floor(Number(raw))));
     const tot = document.getElementById('allocTotal'); if (tot) tot.outerHTML = totalHtml();
-    clearErr('q12');
-  } else if (t.matches('[data-contact]')) {
-    const id = t.getAttribute('data-contact'); A[id] = t.value; clearErr(id);
+    clearErr('alloc');
+  } else if (t.matches('[data-text]')) {
+    const id = t.getAttribute('data-text'); A[id] = t.value; clearErr(id);
   }
 });
 
-function refreshContacts(){
-  ['q17', 'q19'].forEach(id => { const slot = document.getElementById('slot-' + id); if (slot) slot.innerHTML = contactHtml(id); });
+// 重新渲染所有條件式題目。只在單選／複選變動時呼叫，不在打字時呼叫，避免輸入中失焦。
+function refreshConditionals(){
+  if (step === 0 || step === 'out' || step === 'done') return;
+  SECTIONS[step - 1].qs.forEach((id, k) => {
+    if (!Q[id].show && !(Q[id].copyFrom)) return;
+    const slot = document.getElementById('slot-' + id);
+    if (slot) slot.innerHTML = qHtml(id, k === 0);
+  });
 }
+
 function setErr(id, msg){ const box = document.getElementById('box-' + id); if (!box) return; box.classList.toggle('bad', !!msg); const el = box.querySelector('.err'); if (el) el.textContent = msg || ''; }
 function clearErr(id){ setErr(id, ''); const n = document.getElementById('navErr'); if (n) n.textContent = ''; }
 
 function validateSection(i){
   let ok = true, firstBad = null;
   SECTIONS[i].qs.forEach(id => {
+    if (!visible(id)) { setErr(id, ''); return; }
     const q = Q[id]; let err = '';
     if (q.type === 'radio') { if (!A[id]) err = ui('req'); }
     else if (q.type === 'check') {
       const arr = A[id] || [];
       if (q.exact) { if (arr.length !== q.exact) err = fmt(ui('exactly'), { n: q.exact }); }
       else if (arr.length < 1) err = ui('req');
+      else if (q.min && arr.length < q.min) err = fmt(ui('min'), { n: q.min });
       else if (q.max && arr.length > q.max) err = fmt(ui('max'), { n: q.max });
     } else if (q.type === 'alloc') {
-      const all = FEATURES.every(f => A.q12 && Number.isFinite(A.q12[f.key]));
+      const all = FEATURES.every(f => A.alloc && Number.isFinite(A.alloc[f.key]));
       const s = allocSum();
       if (!all || s !== 100) err = ui('sum') + s;
+    } else if (q.type === 'text') {
+      if (!q.optional && !(A[id] || '').trim()) err = ui('req');
     } else if (q.type === 'contact') {
-      if (q.show()) { if (!(A[id] || '').trim()) err = ui('contactReq'); else if (!A[q.consentKey]) err = ui('consentReq'); }
+      if (!(A[id] || '').trim()) err = ui('contactReq');
+      else if (!A[q.consentKey]) err = ui('consentReq');
     }
     setErr(id, err);
     if (err) { ok = false; if (!firstBad) firstBad = id; }
@@ -487,40 +580,41 @@ function onNext(){
   if (sending) return;
   const i = step - 1;
   if (!validateSection(i)) return;
-  if (step === 1 && A.q2 === '沒有') { submit('screened_out', 'out'); return; }
+  if (step === 1 && A.follows_gl === '從來沒有') { submit('screened_out', 'out'); return; }
   if (step === SECTIONS.length) { submit('completed', 'done'); return; }
   step++; render();
 }
 
 function payload(status){
-  const has17 = Q.q17.show(), has19 = Q.q19.show();
-  return {
+  const d = {
     status, lang, src,
-    q1: A.q1 || '', q2: A.q2 || '', q3: A.q3 || '', q4: A.q4 || '', q5: A.q5 || '', q6: A.q6 || '',
-    q7: A.q7 || [], q8: A.q8 || '', q9: A.q9 || '', q10: A.q10 || '', q11: A.q11 || [],
-    q12: A.q12 || {}, q13: A.q13 || [], q14: A.q14 || '', q15: A.q15 || '',
-    q16: A.q16 || [], q17: has17 ? (A.q17 || '').trim() : '', consent17: has17 && !!A.consent17,
-    q18: A.q18 || '', q19: has19 ? (A.q19 || '').trim() : '', consent19: has19 && !!A.consent19,
     hp: (document.getElementById('hp') || {}).value || '',
     ua: navigator.userAgent.slice(0, 200)
   };
+  QKEYS.forEach(k => {
+    const q = Q[k];
+    if (q.type === 'alloc') return;
+    const empty = q.type === 'check' ? [] : '';
+    d[k] = visible(k) ? (A[k] === undefined ? empty : A[k]) : empty;
+  });
+  d.alloc = A.alloc || {};
+  d.consent_research = visible('contact_research') ? (A.consent_research ? 'yes' : 'no') : '';
+  d.consent_lottery = visible('contact_lottery') ? (A.consent_lottery ? 'yes' : 'no') : '';
+  return d;
 }
 
-// 把 payload 攤平成 Google Form 的欄位（陣列用「; 」串接，布林轉 yes / no）
+// 把 payload 攤平成 Google 表單的欄位（陣列用「; 」串接）
 function toFormBody(d){
   const E = CFG.form.entries;
   const b = new URLSearchParams();
   const put = (k, v) => { if (E[k] != null && v !== '' && v != null) b.append(E[k], String(v)); };
   const j = (v) => (Array.isArray(v) ? v.join('; ') : v);
-  put('lang', d.lang); put('src', d.src); put('status', d.status);
-  ['q1','q2','q3','q4','q5','q6','q8','q9','q10','q14','q15'].forEach(k => put(k, d[k]));
-  put('q7', j(d.q7)); put('q11', j(d.q11)); put('q13', j(d.q13)); put('q16', j(d.q16));
-  if (d.status === 'completed') {
-    FEATURES.forEach(f => put('q12_' + f.key, Number(d.q12[f.key])));
-    put('q17_contact', d.q17); put('consent_q17', d.q17 ? (d.consent17 ? 'yes' : 'no') : '');
-    put('q18_lottery', d.q18); put('q19_contact', d.q19); put('consent_q19', d.q19 ? (d.consent19 ? 'yes' : 'no') : '');
-  }
-  put('ua', d.ua);
+  put('lang', d.lang); put('src', d.src); put('status', d.status); put('ua', d.ua);
+  if (d.status === 'screened_out') { put('follows_gl', d.follows_gl); return b; }
+  QKEYS.forEach(k => { if (Q[k].type !== 'alloc') put(k, j(d[k])); });
+  FEATURES.forEach(f => put(f.key, Number(d.alloc[f.key])));
+  put('consent_research', d.consent_research);
+  put('consent_lottery', d.consent_lottery);
   return b;
 }
 
@@ -533,7 +627,7 @@ function send(data){
       setTimeout(() => resolve({ ok: true, local: true }), 400);
       return;
     }
-    // Google Form 不回 CORS 標頭，用 no-cors 送出；回應是 opaque，沒有網路錯誤就視為成功。
+    // Google 表單不回 CORS 標頭，用 no-cors 送出；回應是 opaque，沒有網路錯誤就視為成功。
     fetch(CFG.form.action, { method: 'POST', mode: 'no-cors', body: toFormBody(data) })
       .then(() => resolve({ ok: true }))
       .catch(reject);
