@@ -171,6 +171,8 @@ const UI = {
     lotteryIntro:'完成問卷並自願留下聯絡方式者，即可參加抽獎。',
     lotteryKV:[['問卷截止','2026/9/30 23:59（台灣時間）'],['開獎','2026/10/3 22:00（台灣時間）'],['名額','6 位，依中獎順序聯繫選擇獎品'],['公布','本頁面公布並私訊通知，不完整揭露聯絡資訊']],
     prizes:'獎品',
+    shippingTitle:'獎品寄送方式 📦',
+    shipping:['獎品將透過「賣貨便」寄出，您只需指定取貨的超商門市，不需要提供住家地址。','下單時需支付的運費與 20 元費用，我們會全額內退（現金隨包裹一併退還），實際不會向您收取任何費用。'],
     allocHint:'六格數字加總需為 100。'
   },
   cn: {
@@ -197,6 +199,8 @@ const UI = {
     lotteryIntro:'完成问卷并自愿留下联系方式者，即可参加抽奖。',
     lotteryKV:[['问卷截止','2026/9/30 23:59（台湾时间）'],['开奖','2026/10/3 22:00（台湾时间）'],['名额','6 位，按中奖顺序联系选择奖品'],['公布','本页面公布并私信通知，不完整公开联系信息']],
     prizes:'奖品',
+    shippingTitle:'奖品寄送方式 📦',
+    shipping:['奖品将通过台湾「卖货便」寄出，您只需指定取货的便利店门市，不需要提供住家地址。','下单时需支付的运费与 20 元费用，我们会全额内退（现金随包裹一并退还），实际不会向您收取任何费用。'],
     allocHint:'六格数字加总需为 100。'
   }
 };
@@ -285,8 +289,8 @@ const Q = {
     cn:{ t:'最怕漏掉的是哪一种？', o:['直播','见面会 / 签售','演唱会 / Fan Meeting','品牌活动 / 记者会','节目或剧集播出','颁奖典礼','粉丝企划 / 应援','其他'] } },
 
   post_event: { type:'check', max:3,
-    tw:{ t:'活動結束後，妳最常找什麼？', o:['飯拍照片（含站姊、常追線下的粉絲所拍攝）','現場影片','影片翻譯','官方照片','新聞 / 報導','其他粉絲的心得','不特別找'] },
-    cn:{ t:'活动结束后，你最常找什么？', o:['饭拍照片（含站姐、常追线下的粉丝所拍摄）','现场视频','视频翻译','官方照片','新闻 / 报道','其他粉丝的心得','不特别找'] } },
+    tw:{ t:'活動結束後，妳最常找什麼？', o:['飯拍照片（含站姐、現場粉絲拍攝）','現場影片（粉絲拍攝的現場片段）','影片翻譯（中文／其他語言的翻譯或摘要）','官方照片（官方帳號、經紀公司、品牌釋出）','新聞／報導（媒體報導、新聞稿）','其他粉絲的心得（參加心得、討論串、開箱）','不特別找'] },
+    cn:{ t:'活动结束后，你最常找什么？', o:['饭拍照片（含站姐、现场粉丝拍摄）','现场视频（粉丝拍摄的现场片段）','视频翻译（中文／其他语言的翻译或摘要）','官方照片（官方账号、经纪公司、品牌释出）','新闻／报道（媒体报道、新闻稿）','其他粉丝的心得（参加心得、开箱、讨论串）','不特别找'] } },
 
   alloc: { type:'alloc',
     tw:{ t:'在追星的資訊需求上，以下六件事對妳的重要程度。請分配 100 分（總和 100）。' },
@@ -308,8 +312,8 @@ const Q = {
     tw:{ t:'訪談／測試聯絡方式' }, cn:{ t:'访谈／测试联系方式' } },
 
   lottery: { type:'radio', lottery:true,
-    tw:{ t:'是否參加本次問卷抽獎？', o:['願意參加','不參加'], p:['GR 初版小說','Any 皮質吊牌','官方明信片（影單人 ×1、繆妮單人 ×1）','2026 BBFF 小卡 奶愛一套','2026 BBFF 小卡 帕風一套','2026 BBFF 小卡 景米一套'] },
-    cn:{ t:'是否参加本次问卷抽奖？', o:['愿意参加','不参加'], p:['GR 初版小说','Any 皮质吊牌','官方明信片（影单人 ×1、缪妮单人 ×1）','2026 BBFF 小卡 奶爱一套','2026 BBFF 小卡 帕风一套','2026 BBFF 小卡 景米一套'] } },
+    tw:{ t:'是否參加本次問卷抽獎？', o:['願意參加','不參加'], p:['Girl Rules 初版小說 ＆ Girl Rules 終映卡組（特殊卡為 ViewMim 款）','Any 皮質吊牌 ＆ 官方書展 EmiBonnie 雙人明信片 ×1','官方書展明信片（Namtan ×1、Film ×1、Mewnich ×1）','宿敵戀人 KapookCiize 終映普卡一份','宿敵戀人 JanJingJing 終映普卡一份','2026 BBFF 小卡三套（MilkLove ＆ PahnFond ＆ ViewMim 各一套）'] },
+    cn:{ t:'是否参加本次问卷抽奖？', o:['愿意参加','不参加'], p:['Girl Rules 初版小说 ＆ Girl Rules 终映卡组（特殊卡为 ViewMim 款）','Any 皮质吊牌 ＆ 官方书展 EmiBonnie 双人明信片 ×1','官方书展明信片（Namtan ×1、Film ×1、Mewnich ×1）','宿敌恋人 KapookCiize 终映普卡一份','宿敌恋人 JanJingJing 终映普卡一份','2026 BBFF 小卡三套（MilkLove ＆ PahnFond ＆ ViewMim 各一套）'] } },
 
   contact_lottery: { type:'contact', consentKey:'consent_lottery', hintKey:'hint_contact_lottery', copyFrom:'contact_research',
     show:() => A.lottery === '願意參加',
@@ -448,7 +452,10 @@ function lotteryHtml(prizes){
   const kv = ui('lotteryKV').map(p => '<span>' + esc(p[0]) + '</span><span>' + esc(p[1]) + '</span>').join('');
   return '<div class="note"><b>' + esc(ui('lotteryTitle')) + '</b>' + esc(ui('lotteryIntro')) +
     '<div class="kv">' + kv + '</div>' +
-    '<b>' + esc(ui('prizes')) + '</b><ol>' + prizes.map(p => '<li>' + esc(p) + '</li>').join('') + '</ol></div>';
+    '<b>' + esc(ui('prizes')) + '</b><ol>' + prizes.map(p => '<li>' + esc(p) + '</li>').join('') + '</ol>' +
+    '<b style="margin-top:10px">' + esc(ui('shippingTitle')) + '</b>' +
+    ui('shipping').map(p => '<p style="margin:4px 0 0">' + esc(p) + '</p>').join('') +
+    '</div>';
 }
 
 function totalHtml(){
